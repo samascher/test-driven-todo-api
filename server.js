@@ -57,8 +57,6 @@ app.get('/api/todos', function index(req, res) {
 
 app.post('/api/todos', function create(req, res) {
   var newTodo = req.body;
-  console.log(newTodo);
-    
   if(todos.length > 0){
     newTodo._id = todos[todos.length - 1]._id + 1;
   } else {newTodo._id = 1;}
@@ -71,7 +69,7 @@ app.get('/api/todos/:id', function show(req, res) {
   var todoId = parseInt(req.params.id);
   for(var i = 0; i < todos.length; i++){
     if(todos[i]._id === todoId){
-      res.send(todos[i]);
+      res.json(todos[i]);
     }
   }
 });
@@ -81,6 +79,16 @@ app.put('/api/todos/:id', function update(req, res) {
    * id specified in the route parameter (:id) and respond
    * with the newly updated todo.
    */
+  var todoId = parseInt(req.params.id);
+  var myTodo = todos.filter(function(todos){
+    return todos._id === todoId;
+  })[0];//i don' t know why this goes here
+  console.log(myTodo);
+  myTodo.task = req.body.task;
+  myTodo.description = req.body.description;
+  res.json(myTodo);
+
+
 });
 
 app.delete('/api/todos/:id', function destroy(req, res) {
@@ -91,9 +99,8 @@ app.delete('/api/todos/:id', function destroy(req, res) {
   var todoId = parseInt(req.params.id);
   for(var i = 0; i < todos.length; i++){
     if(todos[i]._id === todoId){
-
-      todos.splice(todoId-1, 1);
-      res.send(todos[i]);
+      res.json(todos[i]);
+      todos.splice(i, 1);
     }
   }
 });
